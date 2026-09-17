@@ -1,0 +1,431 @@
+{
+  "name": "פודקאסט → סיכום למייל",
+  "nodes": [
+    {
+      "id": "Manual Trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "Setup",
+      "name": "Setup",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        0
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0",
+              "name": "episodeUrl",
+              "value": "https://dts.podtrac.com/redirect.mp3/cdn.simplecast.com/media/audio/transcoded/a0bcaa21-99d1-482d-9833-feb3aaf9e31c/d3e99393-a86b-4bf5-ae97-7b5194be2228/episodes/audio/group/f6cf85c6-b496-4890-a02e-b9225ef55544/group-item/c06f7da1-2a1f-4120-8cea-e20cdb7d7b2d/128_default_tc.mp3",
+              "type": "string"
+            },
+            {
+              "id": "1",
+              "name": "episodeTitle",
+              "value": "חושבים טוב 212",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "episodeBytes",
+              "value": "82658133",
+              "type": "string"
+            },
+            {
+              "id": "3",
+              "name": "model",
+              "value": "gemini-2.5-flash",
+              "type": "string"
+            },
+            {
+              "id": "4",
+              "name": "mailbox",
+              "value": "SENDER@example.com",
+              "type": "string"
+            },
+            {
+              "id": "5",
+              "name": "promptTranscribe",
+              "value": "אתה מתמלל מקצועי של פודקאסטים בעברית.\n\nתמלל את קובץ האודיו המצורף במלואו, מהשנייה הראשונה ועד האחרונה.\n\nכללים:\n\n1. תמלל מילה במילה. אל תסכם, אל תקצר, ואל תדלג על שום קטע — כולל פתיח, פרסומות וסיום.\n\n2. פתח כל פסקה בחותמת זמן בפורמט [HH:MM:SS] — שעות:דקות:שניות אמיתיים, כשדקות ושניות הם 00 עד 59 בלבד (60 דקות = שעה נוספת, לא \"00:60\"). פסקה חדשה בכל החלפת דובר, ולכל היותר כל 45 שניות.\n\n3. סמן את הדובר בתחילת כל פסקה. אם שמו נאמר בפרק — השתמש בשם (\"יהודית:\"). אם לא — \"מנחה:\" ו\"אורח:\".\n\n4. נקה מילות מילוי חוזרות (אה, אמ, כאילו) כשהן לא נושאות משמעות, וגמגומים וחזרות מקריות. מעבר לזה אל תשנה את הניסוח — לא סגנון, לא סדר מילים ולא בחירת מילים.\n\n5. הוסף פיסוק מלא ופצל למשפטים קריאים.\n\n6. שמות של אנשים, ספרים, מחקרים ומונחים מקצועיים שנאמרו באנגלית — כתוב באנגלית במקור.\n\n7. אם קטע לא ברור או לא נשמע, כתוב [לא ברור] במקום לנחש.\n\n8. אל תוסיף הקדמה, הערות, כותרות או סיכום משלך. הפלט הוא התמלול בלבד.",
+              "type": "string"
+            },
+            {
+              "id": "6",
+              "name": "promptSummary",
+              "value": "אתה עורך תוכן שמכין \"דף מלווה\" לפרק פודקאסט, עבור מאזין שרוצה להבין את הפרק לעומק תוך כדי ההאזנה ולחזור אליו אחר כך.\n\nלפניך תמלול מלא של פרק, עם חותמות זמן.\n\nהפק את המבנה הבא, בעברית, בדיוק בסדר הזה ובכותרות האלה:\n\n## על מה הפרק\nפסקה אחת, שלוש עד חמש שורות. מה קורה בפרק ועם מי.\n\n## הרעיון המרכזי\nשניים עד ארבעה משפטים. התובנה האחת שהפרק בנוי סביבה. לא רשימה — טענה אחת.\n\n## נקודות עניין\nשש עד עשר נקודות. כל נקודה פותחת בחותמת הזמן שבה נאמרה, בפורמט [HH:MM:SS] כפי שמופיע בתמלול (דקות ושניות 00–59 בלבד, לא \"00:60\"), ואחריה משפט או שניים. סדר כרונולוגי.\n\n## ציטוטים בולטים\nשלושה עד חמישה ציטוטים, כל אחד עם חותמת זמן. מילה במילה מהתמלול, בתוך מרכאות.\n\n## מונחים ושמות שהוזכרו\nכל מונח מקצועי, שם של אדם, ספר, מחקר או מושג שהוזכר בפרק ולא הוסבר בו במלואו. שורה אחת של הסבר לכל אחד.\n\n## ציר זמן\nחלוקת הפרק לארבעה עד שמונה קטעים. לכל קטע: טווח זמן וכותרת קצרה.\n\n## שאלות למחשבה\nשלוש עד חמש שאלות פתוחות שהפרק מעלה ולא סוגר.\n\nכללים מחייבים:\n\n- כל חותמת זמן חייבת להילקח מהתמלול שלפניך. אל תמציא ואל תשער זמנים.\n- ציטוטים חייבים להיות מדויקים מילה במילה. אם אינך יכול לצטט במדויק, אל תכלול את הציטוט.\n- כתוב אך ורק מה שנמצא בתמלול. אל תוסיף מידע מהידע הכללי שלך, גם אם אתה מכיר את הנושא.\n- אם סעיף מסוים אין לו מספיק חומר בתמלול, כתוב תחתיו \"אין בפרק\" ועבור הלאה. אל תמלא בתוכן כללי.\n- אל תוסיף הקדמה או סיכום משלך. התחל ישר מהכותרת הראשונה.\n\nהתמלול:",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Start Upload",
+      "name": "Start Upload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        0
+      ],
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/files",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Goog-Upload-Protocol",
+              "value": "resumable"
+            },
+            {
+              "name": "X-Goog-Upload-Command",
+              "value": "start"
+            },
+            {
+              "name": "X-Goog-Upload-Header-Content-Length",
+              "value": "={{ $json.episodeBytes }}"
+            },
+            {
+              "name": "X-Goog-Upload-Header-Content-Type",
+              "value": "audio/mpeg"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ file: { display_name: $json.episodeTitle } }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "Download Episode",
+      "name": "Download Episode",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        0
+      ],
+      "parameters": {
+        "url": "={{ $('Setup').first().json.episodeUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          },
+          "timeout": 600000
+        }
+      }
+    },
+    {
+      "id": "Finish Upload",
+      "name": "Finish Upload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Start Upload').first().json.headers['x-goog-upload-url'] }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Goog-Upload-Offset",
+              "value": "0"
+            },
+            {
+              "name": "X-Goog-Upload-Command",
+              "value": "upload, finalize"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {
+          "timeout": 900000
+        }
+      }
+    },
+    {
+      "id": "Transcribe",
+      "name": "Transcribe",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        0
+      ],
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/{{ $('Setup').first().json.model }}:generateContent",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ contents: [{ parts: [{ text: $('Setup').first().json.promptTranscribe }, { file_data: { mime_type: 'audio/mpeg', file_uri: $json.file.uri } }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 65536 } }) }}",
+        "options": {
+          "timeout": 1800000
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 20000
+    },
+    {
+      "id": "Summarize",
+      "name": "Summarize",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        0
+      ],
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/{{ $('Setup').first().json.model }}:generateContent",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ contents: [{ parts: [{ text: $('Setup').first().json.promptSummary + '\n\n' + $json.candidates[0].content.parts.filter(p => p.text).map(p => p.text).join('') }] }], generationConfig: { temperature: 0.3, maxOutputTokens: 16384 } }) }}",
+        "options": {
+          "timeout": 900000
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 15000
+    },
+    {
+      "id": "Collect",
+      "name": "Collect",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1400,
+        0
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0",
+              "name": "title",
+              "value": "={{ $('Setup').first().json.episodeTitle }}",
+              "type": "string"
+            },
+            {
+              "id": "1",
+              "name": "transcript",
+              "value": "={{ $('Transcribe').first().json.candidates[0].content.parts.filter(p => p.text).map(p => p.text).join('') }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "summary",
+              "value": "={{ $json.candidates[0].content.parts.filter(p => p.text).map(p => p.text).join('') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "Summary To HTML",
+      "name": "Summary To HTML",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        0
+      ],
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.summary }}",
+        "destinationKey": "summaryHtml",
+        "options": {}
+      }
+    },
+    {
+      "id": "Transcript To File",
+      "name": "Transcript To File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1800,
+        0
+      ],
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "transcript",
+        "options": {
+          "fileName": "transcript.txt",
+          "encoding": "utf8"
+        }
+      }
+    },
+    {
+      "id": "Send Email",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2000,
+        0
+      ],
+      "parameters": {
+        "fromEmail": "={{ $('Setup').first().json.mailbox }}",
+        "toEmail": "={{ $('Setup').first().json.mailbox }}",
+        "subject": "={{ $('Collect').first().json.title }}",
+        "emailFormat": "html",
+        "html": "={{ $('Summary To HTML').first().json.summaryHtml }}",
+        "options": {
+          "attachments": "data"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Setup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setup": {
+      "main": [
+        [
+          {
+            "node": "Start Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Upload": {
+      "main": [
+        [
+          {
+            "node": "Download Episode",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Episode": {
+      "main": [
+        [
+          {
+            "node": "Finish Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finish Upload": {
+      "main": [
+        [
+          {
+            "node": "Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe": {
+      "main": [
+        [
+          {
+            "node": "Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize": {
+      "main": [
+        [
+          {
+            "node": "Collect",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect": {
+      "main": [
+        [
+          {
+            "node": "Summary To HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summary To HTML": {
+      "main": [
+        [
+          {
+            "node": "Transcript To File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcript To File": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
