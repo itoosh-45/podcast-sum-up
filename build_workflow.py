@@ -13,7 +13,9 @@ EPISODE = {
     "bytes": "82658133",
 }
 MODEL = "gemini-2.5-flash"
-MAILBOX = "SENDER@example.com"
+# SENDER חייב להיות חשבון הג'ימייל שעליו נוצרה סיסמת האפליקציה — SMTP לא מרשה לזייף שולח.
+SENDER = "SENDER@example.com"
+RECIPIENT = "SENDER@example.com"
 
 
 def prompt(path):
@@ -45,7 +47,8 @@ nodes = [
         ("episodeTitle", EPISODE["title"]),
         ("episodeBytes", EPISODE["bytes"]),
         ("model", MODEL),
-        ("mailbox", MAILBOX),
+        ("sender", SENDER),
+        ("recipient", RECIPIENT),
         ("promptTranscribe", prompt("prompts/01-transcription.md")),
         ("promptSummary", prompt("prompts/02-summary.md")),
     ])),
@@ -137,8 +140,8 @@ nodes = [
     }),
 
     node("Send Email", "n8n-nodes-base.emailSend", 2.1, [2000, 0], {
-        "fromEmail": "={{ $('Setup').first().json.mailbox }}",
-        "toEmail": "={{ $('Setup').first().json.mailbox }}",
+        "fromEmail": "={{ $('Setup').first().json.sender }}",
+        "toEmail": "={{ $('Setup').first().json.recipient }}",
         "subject": "={{ $('Collect').first().json.title }}",
         "emailFormat": "html",
         "html": "={{ $('Summary To HTML').first().json.summaryHtml }}",
