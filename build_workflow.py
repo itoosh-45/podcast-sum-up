@@ -1,5 +1,7 @@
 """מרכיב את קובץ ה-workflow ל-n8n מתוך הפרומפטים שב-prompts/.
 
+דורש config.local.json מקומי עם sender ו-recipient — ראה config.example.json.
+
 מריצים אחרי כל שינוי בפרומפט:  python build_workflow.py
 """
 import io, json, re
@@ -13,9 +15,8 @@ EPISODE = {
     "bytes": "82658133",
 }
 MODEL = "gemini-2.5-flash"
-# SENDER חייב להיות חשבון הג'ימייל שעליו נוצרה סיסמת האפליקציה — SMTP לא מרשה לזייף שולח.
-SENDER = "SENDER@example.com"
-RECIPIENT = "SENDER@example.com"
+# כתובות המייל נקראות מקובץ מקומי שאינו נכנס ל-git. הריפו ציבורי.
+CONFIG = json.load(io.open("config.local.json", encoding="utf-8"))
 
 
 def prompt(path):
@@ -47,8 +48,8 @@ nodes = [
         ("episodeTitle", EPISODE["title"]),
         ("episodeBytes", EPISODE["bytes"]),
         ("model", MODEL),
-        ("sender", SENDER),
-        ("recipient", RECIPIENT),
+        ("sender", CONFIG["sender"]),
+        ("recipient", CONFIG["recipient"]),
         ("promptTranscribe", prompt("prompts/01-transcription.md")),
         ("promptSummary", prompt("prompts/02-summary.md")),
     ])),

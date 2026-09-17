@@ -1,0 +1,5 @@
+# כתובות המייל האמיתיות — נשארות על המחשב בלבד
+config.local.json
+
+# נבנה מחדש בכל הרצה של build_workflow.py, ומכיל את הכתובות מ-config.local.json
+n8n-workflow.json
