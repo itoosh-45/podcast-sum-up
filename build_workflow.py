@@ -146,7 +146,9 @@ nodes = [
         "subject": "={{ $('Collect').first().json.title }}",
         "emailFormat": "html",
         "html": "={{ $('Summary To HTML').first().json.summaryHtml }}",
-        "options": {"attachments": "data"},
+        # fileAttachments = קובץ מצורף רגיל. attachments (בלי ה-file) מטמיע בגוף המייל דרך cid.
+        "options": {"fileAttachments": "data"},
+        "operation": "send",
     }),
 ]
 
